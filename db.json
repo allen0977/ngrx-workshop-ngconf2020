@@ -4,18 +4,36 @@
       "id": "ca66d740-e41d-4b70-aea1-a8a20759a647",
       "name": "The Lion, the Witch and the Wardrobe",
       "earnings": "85000000",
-      "description": ""
+      "description": "asdf hh"
     },
     {
       "id": "408c6851-7b7a-439e-b6db-9fb65ea61071",
       "name": "The Adventures of Pinocchio",
-      "earnings": "85000000",
-      "description": ""
+      "earnings": "850000002",
+      "description": "blah"
     },
     {
       "id": "3fe92243-8444-4ee4-bb39-b5460b8919f1",
       "name": "The Hobbit",
-      "earnings": "100000000",
+      "earnings": "100000020",
+      "description": "asdf"
+    },
+    {
+      "id": "9511ac36-8272-4c9b-8c28-b2bb3b6bb2a5",
+      "name": "will this be made?",
+      "earnings": "12",
+      "description": "asdf"
+    },
+    {
+      "id": "38f79434-88a7-4c32-8d6f-571cbf838b84",
+      "name": "asdf",
+      "earnings": "2",
+      "description": "adsf"
+    },
+    {
+      "id": "9d06ae30-daed-4cf1-9cb9-3bd5aaf1054b",
+      "name": "asd",
+      "earnings": null,
       "description": null
     }
   ]

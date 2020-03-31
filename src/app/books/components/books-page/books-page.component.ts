@@ -1,77 +1,48 @@
-import { Component, OnInit } from "@angular/core";
-import {
-  BookModel,
-  calculateBooksGrossEarnings,
-  BookRequiredProps
-} from "src/app/shared/models";
-import { BooksService } from "src/app/shared/services";
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { BookModel, BookRequiredProps } from 'src/app/shared/models';
+import { BooksService } from 'src/app/shared/services';
+import { selectActiveBook, selectAllBooks, selectBooksEarningTotals, State } from 'src/app/shared/state';
+import { BooksPageActions } from '../../actions';
 
 @Component({
-  selector: "app-books",
-  templateUrl: "./books-page.component.html",
-  styleUrls: ["./books-page.component.css"]
+    selector: 'app-books',
+    templateUrl: './books-page.component.html',
+    styleUrls: [
+        './books-page.component.css',
+    ],
 })
 export class BooksPageComponent implements OnInit {
-  books: BookModel[] = [];
-  currentBook: BookModel | null = null;
-  total: number = 0;
+    total$ = this.store.select(selectBooksEarningTotals);
+    books$ = this.store.select(selectAllBooks);
+    currentBook$ = this.store.select(selectActiveBook);
+    constructor(private booksService: BooksService, private store: Store<State>) {}
 
-  constructor(private booksService: BooksService) {}
-
-  ngOnInit() {
-    this.getBooks();
-    this.removeSelectedBook();
-  }
-
-  getBooks() {
-    this.booksService.all().subscribe(books => {
-      this.books = books;
-      this.updateTotals(books);
-    });
-  }
-
-  updateTotals(books: BookModel[]) {
-    this.total = calculateBooksGrossEarnings(books);
-  }
-
-  onSelect(book: BookModel) {
-    this.currentBook = book;
-  }
-
-  onCancel() {
-    this.removeSelectedBook();
-  }
-
-  removeSelectedBook() {
-    this.currentBook = null;
-  }
-
-  onSave(book: BookRequiredProps | BookModel) {
-    if ("id" in book) {
-      this.updateBook(book);
-    } else {
-      this.saveBook(book);
+    ngOnInit() {
+        this.removeSelectedBook();
     }
-  }
 
-  saveBook(bookProps: BookRequiredProps) {
-    this.booksService.create(bookProps).subscribe(() => {
-      this.getBooks();
-      this.removeSelectedBook();
-    });
-  }
+    onSelect(book: BookModel) {
+        this.store.dispatch(BooksPageActions.selectBook({ bookId: book.id }));
+    }
 
-  updateBook(book: BookModel) {
-    this.booksService.update(book.id, book).subscribe(() => {
-      this.getBooks();
-      this.removeSelectedBook();
-    });
-  }
+    onCancel() {
+        this.removeSelectedBook();
+    }
 
-  onDelete(book: BookModel) {
-    this.booksService.delete(book.id).subscribe(() => {
-      this.getBooks();
-      this.removeSelectedBook();
-    });
-  }
+    removeSelectedBook() {
+        this.store.dispatch(BooksPageActions.clearSelectedBook());
+    }
+
+    onSave(book: BookRequiredProps | BookModel) {
+        if ('id' in book) {
+            this.store.dispatch(BooksPageActions.updateBook({ bookId: book.id, changes: book }));
+        } else {
+            this.store.dispatch(BooksPageActions.createBook({ book: book as BookModel }));
+        }
+    }
+
+    onDelete(book: BookModel) {
+        this.store.dispatch(BooksPageActions.deleteBook({ bookId: book.id }));
+    }
 }
